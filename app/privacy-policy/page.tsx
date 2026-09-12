@@ -2,73 +2,60 @@ import Link from "next/link";
 
 export default function PrivacyPolicy() {
   return (
-    <>
-      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50">
-        <div className="max-w-3xl mx-auto px-6 h-20 flex justify-between items-center">
-          <Link href="/" className="font-bold text-blue-600 text-xl">
-            Autheeka
-          </Link>
-          <div className="flex items-center gap-6 font-medium">
-             <Link href="/" className="hover:text-blue-600 transition-colors">
-              Retour à l'accueil
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      <main className="pt-32 pb-20 max-w-3xl mx-auto px-6 bg-white min-h-screen">
-        <h1 className="text-4xl font-extrabold mb-8">Politique de Confidentialité</h1>
+    <main className="flex-1 mx-4 sm:mx-12 md:mx-24 lg:mx-40 xl:mx-64 py-16">
+      <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 sm:p-12">
+        <h1 className="text-3xl md:text-4xl font-black mb-8">Politique de Confidentialité</h1>
         
         <div className="prose prose-blue max-w-none text-gray-700 space-y-6">
-          <p>
-            Dernière mise à jour : {new Date().toLocaleDateString('fr-FR')}
-          </p>
+          <p className="italic text-gray-500">Dernière mise à jour : 4 septembre 2026</p>
 
-          <h2 className="text-2xl font-bold text-black mt-10 mb-4">1. Introduction</h2>
-          <p>
-            Bienvenue sur Autheeka. La protection de vos données personnelles est notre priorité. 
-            Cette politique de confidentialité vous explique quelles informations nous collectons, 
-            comment nous les utilisons et quels sont vos droits.
-          </p>
+          <p>Bienvenue sur Autheeka. La protection de vos données personnelles et de votre vie privée est une priorité pour nous. Cette politique de confidentialité explique comment nous collectons, utilisons et partageons vos informations lorsque vous utilisez notre application mobile et nos services de billetterie.</p>
 
-          <h2 className="text-2xl font-bold text-black mt-10 mb-4">2. Données collectées</h2>
-          <p>
-            Nous collectons les données suivantes :
-          </p>
+          <h2 className="text-2xl font-bold text-blue-600 mt-10 mb-4">1. Données que nous collectons</h2>
+          <p>Nous collectons les types d'informations suivants :</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Informations d'inscription :</strong> nom, adresse e-mail, numéro de téléphone, mot de passe.</li>
-            <li><strong>Données de transaction :</strong> historique d'achats de billets (le paiement est géré de manière sécurisée par Stripe ou Moncash).</li>
-            <li><strong>Informations de profil :</strong> photo de profil, réseaux sociaux liés.</li>
-            <li><strong>Données d'utilisation :</strong> interactions avec l'application, événements consultés.</li>
+              <li><strong>Informations de compte :</strong> Nom complet, adresse e-mail, et mot de passe (haché) pour l'authentification. Le numéro de téléphone, les liens vers vos réseaux sociaux, et la photo de profil sont optionnels.</li>
+              <li><strong>Informations financières :</strong> Historique de vos transactions, solde de votre portefeuille interne. (Les détails de votre carte bancaire sont gérés par nos partenaires de paiement sécurisés et ne transitent jamais sur nos serveurs).</li>
+              <li><strong>Activité sur l'application :</strong> Événements créés, suivis, billets achetés, et interactions sociales (j'aime, commentaires).</li>
+              <li><strong>Identifiants de l'appareil et techniques :</strong> Adresses IP (pour la sécurité), tokens de notifications push (Firebase Cloud Messaging).</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-black mt-10 mb-4">3. Utilisation des données</h2>
-          <p>
-            Les données que nous collectons servent à :
-          </p>
+          <h2 className="text-2xl font-bold text-blue-600 mt-10 mb-4">2. Comment nous utilisons vos données</h2>
+          <p>Vos données sont utilisées pour :</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Créer et gérer votre compte Autheeka.</li>
-            <li>Générer et valider vos billets d'événement.</li>
-            <li>Améliorer l'expérience utilisateur et personnaliser les recommandations.</li>
-            <li>Vous envoyer des notifications importantes concernant vos événements.</li>
+              <li>Créer et gérer votre compte utilisateur.</li>
+              <li>Générer, attribuer et valider vos billets d'événements.</li>
+              <li>Gérer votre portefeuille interne (dépôts et achats de billets).</li>
+              <li>Vous envoyer des notifications importantes et des e-mails transactionnels (confirmation de commande, mot de passe oublié).</li>
+              <li>Assurer la sécurité de la plateforme.</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-black mt-10 mb-4">4. Partage des données</h2>
-          <p>
-            Nous ne vendons jamais vos données personnelles. Elles peuvent être partagées uniquement dans les cas suivants :
-          </p>
+          <h2 className="text-2xl font-bold text-blue-600 mt-10 mb-4">3. Partage de données avec des tiers</h2>
+          <p>Nous partageons certaines informations nécessaires à la prestation de nos services avec des partenaires de confiance :</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Avec les organisateurs d'événements (nom et prénom pour la validation des billets).</li>
-            <li>Avec nos prestataires de paiement (Stripe, Moncash) pour le traitement sécurisé des transactions.</li>
-            <li>Si la loi l'exige.</li>
+              <li><strong>Services de Paiement :</strong> Stripe et MonCash pour traiter vos dépôts et paiements.</li>
+              <li><strong>Services Firebase (Google) :</strong> Pour l'authentification sociale, le stockage d'images, l'envoi de notifications (FCM) et le suivi des plantages (Crashlytics).</li>
+              <li><strong>Communications :</strong> Brevo (emails) et WhatsApp Business API (envoi de billets optionnel).</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-black mt-10 mb-4">5. Vos droits</h2>
-          <p>
-            Vous avez le droit de demander l'accès, la modification ou la suppression de vos données personnelles à tout moment en nous contactant à <strong>support@autheeka.com</strong>.
-          </p>
+          <h2 className="text-2xl font-bold text-blue-600 mt-10 mb-4">4. Sécurité de vos données</h2>
+          <p>Toutes les communications entre votre application et nos serveurs sont chiffrées (HTTPS/TLS). Les mots de passe sont stockés de manière sécurisée à l'aide d'algorithmes de hachage (bcrypt).</p>
+
+          <h2 className="text-2xl font-bold text-blue-600 mt-10 mb-4">5. Suppression de votre compte et de vos données</h2>
+          <p>Vous avez le droit de demander la suppression de votre compte et de vos données personnelles à tout moment :</p>
+          <ul className="list-disc pl-6 space-y-2">
+              <li><strong>Via l'application :</strong> Rendez-vous dans les <em>Paramètres</em> &gt; <em>Compte</em> &gt; <em>Supprimer mon compte</em>.</li>
+              <li><strong>Via notre support :</strong> Envoyez-nous un e-mail à l'adresse indiquée ci-dessous.</li>
+          </ul>
+          <p><strong>Note concernant les organisateurs d'événements :</strong> Si vous avez créé des événements futurs pour lesquels des billets ont déjà été vendus, la suppression de votre compte sera bloquée jusqu'à ce que ces événements soient passés, afin de garantir les droits des acheteurs. Sinon, lorsque vous demandez la suppression, votre compte est immédiatement désactivé (vos événements et votre profil deviennent invisibles). Une période de grâce de 30 jours commence. Pendant cette période, vous pouvez annuler la suppression en vous reconnectant simplement à votre compte. Passé ce délai, toutes vos données (et les événements sans tickets vendus) seront définitivement supprimées. Pour les événements passés avec des tickets vendus, les données de l'événement seront purgées et anonymisées.</p>
+
+          <h2 className="text-2xl font-bold text-blue-600 mt-10 mb-4">6. Nous contacter</h2>
+          <p>Pour toute question concernant cette politique de confidentialité ou pour exercer vos droits, vous pouvez nous contacter :</p>
+          <ul className="list-disc pl-6 space-y-2">
+              <li>Email : support@autheeka.com</li>
+          </ul>
         </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }

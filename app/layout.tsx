@@ -1,15 +1,28 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
+import { AuthProvider } from "@/lib/AuthContext";
+import { AuthNav } from "@/components/AuthNav";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
 
+const poppins = Poppins({
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Autheeka - Événements, Billetterie & Accès Sécurisé",
   description: "Découvrez Autheeka, le réseau social événementiel avec billetterie sécurisée et scan ultra-rapide.",
+  icons: {
+    icon: "/logo_icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -18,9 +31,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${inter.variable} antialiased`}>
+    <html lang="fr" className={`${inter.variable} ${poppins.variable} antialiased`}>
       <body className="min-h-screen flex flex-col bg-white text-gray-900 font-sans">
-        <header className="sticky top-0 z-[100] w-full bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <GoogleOAuthProvider clientId="807727177798-38gu4jfsscdtnh9otl9r7temp9sanq9a.apps.googleusercontent.com">
+          <AuthProvider>
+            <header className="sticky top-0 z-[100] w-full bg-white/80 backdrop-blur-md border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <a href="/" className="flex items-center">
@@ -28,14 +43,11 @@ export default function RootLayout({
               </a>
             </div>
             <nav className="hidden md:flex gap-6 font-semibold text-sm text-gray-600">
-              <a href="#" className="hover:text-blue-600 transition-colors">Explorer</a>
-              <a href="#" className="hover:text-blue-600 transition-colors">Créer un événement</a>
-              <a href="#" className="hover:text-blue-600 transition-colors">Aide</a>
+              <Link href="/explore" className="hover:text-blue-600 transition-colors">Explorer</Link>
+              <Link href="/create" className="hover:text-blue-600 transition-colors">Créer un événement</Link>
+              <a href="mailto:support@autheeka.com" className="hover:text-blue-600 transition-colors">Aide</a>
             </nav>
-            <div className="flex items-center gap-3">
-              <a href="#" className="text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors">Connexion</a>
-              <a href="#" className="hidden sm:inline-flex items-center justify-center px-4 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-full transition-colors">S'inscrire</a>
-            </div>
+            <AuthNav />
           </div>
         </header>
 
@@ -53,15 +65,14 @@ export default function RootLayout({
               <div>
                 <h3 className="font-bold text-gray-900 mb-4">Légal</h3>
                 <ul className="space-y-2 text-sm text-gray-500">
-                  <li><a href="#" className="hover:text-blue-600">Conditions générales</a></li>
-                  <li><a href="#" className="hover:text-blue-600">Confidentialité</a></li>
+                  <li><Link href="/terms" className="hover:text-blue-600">Conditions générales</Link></li>
+                  <li><Link href="/privacy-policy" className="hover:text-blue-600">Confidentialité</Link></li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 mb-4">Contact</h3>
                 <ul className="space-y-2 text-sm text-gray-500">
-                  <li><a href="#" className="hover:text-blue-600">Support</a></li>
-                  <li><a href="#" className="hover:text-blue-600">Partenariats</a></li>
+                  <li><a href="mailto:support@autheeka.com" className="hover:text-blue-600">Support</a></li>
                 </ul>
               </div>
             </div>
@@ -70,6 +81,8 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
+        </AuthProvider>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

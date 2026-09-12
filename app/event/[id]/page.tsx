@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { fetchGraphQL } from "@/lib/api";
 import { getMediaVariant, formatDate, formatTime } from "@/lib/utils";
+import ShareButton from "./ShareButton";
 
 const VerifiedBadge = ({ badge, className = "w-5 h-5" }: { badge: string, className?: string }) => {
   if (badge !== 'GOLD' && badge !== 'SILVER') return null;
@@ -61,17 +62,19 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-gray-50/20 to-transparent"></div>
 
-        {/* Floating Back Button (Aligned with content) */}
+        {/* Floating Buttons (Aligned with content) */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-full relative">
+          <div className="mx-4 sm:mx-12 md:mx-24 lg:mx-40 xl:mx-64 h-full relative">
             <Link href="/" className="absolute top-6 left-4 sm:left-6 lg:left-8 z-10 w-10 h-10 flex items-center justify-center bg-black/20 backdrop-blur-md text-white rounded-full hover:bg-black/40 transition-colors pointer-events-auto">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
             </Link>
+
+            <ShareButton title={event.title} text={event.description} />
           </div>
         </div>
       </div>
 
-      <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-24">
+      <main className="flex-1 mx-4 sm:mx-12 md:mx-24 lg:mx-40 xl:mx-64 relative z-20 -mt-24">
         {/* Content Container */}
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-8">
           <h1 className="text-3xl md:text-4xl font-black leading-[1.1] tracking-tight mb-2">
@@ -155,10 +158,6 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
             </div>
             <svg className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
           </Link>
-
-          <div className="mt-8 pt-6 border-t border-gray-100">
-            {/* End of main content */}
-          </div>
         </div>
 
         {/* Sticky Action Button inside the main container */}
@@ -167,7 +166,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
             href={`autheeka://event/${resolvedParams.id}`}
             className="flex items-center justify-center gap-2 w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-lg shadow-xl shadow-blue-600/30 transition-transform active:scale-95"
           >
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h16v3h-2v10h2v3H4v-3h2V7H4V4zm4 4h8v8H8V8z" /></svg>
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
             <span>Acheter un billet</span>
           </a>
         </div>

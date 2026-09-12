@@ -138,7 +138,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
       </div>
 
       {/* MAIN CONTENT (CONSTRAINED) */}
-      <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 pb-20">
+      <main className="flex-1 mx-4 sm:mx-12 md:mx-24 lg:mx-40 xl:mx-64 -mt-8 relative z-20 pb-20">
         
         {/* Events Section */}
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-8">

@@ -7,7 +7,7 @@ export default function Home() {
       <main className="flex-1">
         {/* Hero Section */}
         <section className="pt-40 pb-20 min-h-screen flex items-center">
-          <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+          <div className="mx-6 sm:mx-12 md:mx-24 lg:mx-40 xl:mx-64 grid md:grid-cols-2 gap-12 items-center">
             <div className="flex flex-col items-start">
               <div className="inline-block px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-semibold mb-6">
                 ✨ Nouveau sur les stores
@@ -23,54 +23,64 @@ export default function Home() {
                 événementiel, billetterie sécurisée et contrôle d'accès ultra-rapide.
                 L'esprit tranquille, du billet à l'entrée.
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex gap-4">
                 <a href="#" className="hover:-translate-y-1 transition-transform">
                   <img
                     src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
                     alt="Disponible sur Google Play"
-                    className="h-14 bg-black rounded-lg"
+                    className="h-[52px] rounded-lg"
                   />
                 </a>
               </div>
             </div>
-            
+
             {/* Mockup decoration */}
-            <div className="relative mx-auto w-full max-w-sm">
-              <div className="relative z-10 bg-white rounded-[40px] shadow-2xl border-[8px] border-gray-900 overflow-hidden aspect-[9/19] flex flex-col items-center">
-                <div className="w-1/2 h-6 bg-gray-900 rounded-b-xl absolute top-0"></div>
-                <div className="mt-16 text-2xl font-bold text-blue-600 mb-8">Autheeka</div>
-                
-                <div className="w-4/5 bg-gray-50 rounded-xl p-4 mb-4 shadow-sm border border-gray-100 flex items-center gap-4">
-                   <div className="w-12 h-12 rounded-full bg-blue-100"></div>
-                   <div className="flex-1 space-y-2">
-                     <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                     <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                   </div>
-                </div>
+            <div className="relative mx-auto flex justify-center w-full max-w-sm">
+              <div
+                className="relative bg-white rounded-[40px] overflow-hidden flex flex-col animate-[float_6s_ease-in-out_infinite]"
+                style={{ width: '280px', height: '580px', boxShadow: '0 0 0 10px #F0F4F8, 0 20px 25px -5px rgba(0, 86, 255, 0.1)' }}
+              >
+                {/* Notch */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[25px] bg-[#F0F4F8] rounded-b-[16px] z-10"></div>
 
-                <div className="w-4/5 bg-gray-50 rounded-xl p-4 mb-8 shadow-sm border border-gray-100 flex items-center gap-4">
-                   <div className="w-12 h-12 rounded-full bg-green-100"></div>
-                   <div className="flex-1 space-y-2">
-                     <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                     <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                   </div>
-                </div>
+                {/* Screen */}
+                <div className="flex-1 bg-slate-50 pt-[60px] px-5 pb-5 flex flex-col gap-4">
+                  <div className="flex justify-center mb-4">
+                    <img src="/logo_text.png" alt="Autheeka" className="h-3.5 w-auto" />
+                  </div>
 
-                <div className="w-4/5 py-3 bg-blue-600 text-white text-center rounded-full font-semibold shadow-md">
-                  Scan Rapide
+
+                  <div className="bg-white p-4 rounded-xl flex items-center gap-4 shadow-sm">
+                    <div className="w-10 h-10 rounded-lg bg-blue-600/10"></div>
+                    <div className="flex-1">
+                      <div className="h-2 bg-slate-200 rounded w-[120px] mb-1.5"></div>
+                      <div className="h-2 bg-slate-200 rounded w-[80px]"></div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-xl flex items-center gap-4 shadow-sm">
+                    <div className="w-10 h-10 rounded-lg bg-emerald-500/10"></div>
+                    <div className="flex-1">
+                      <div className="h-2 bg-slate-200 rounded w-[120px] mb-1.5"></div>
+                      <div className="h-2 bg-slate-200 rounded w-[80px]"></div>
+                    </div>
+                  </div>
+
+                  <div className="mt-auto bg-blue-600 text-white text-center p-4 rounded-full font-semibold text-[0.9rem]">
+                    Scan Rapide
+                  </div>
                 </div>
               </div>
-              
-              {/* Decorative circles */}
-              <div className="absolute top-10 -right-10 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl -z-10"></div>
-              <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-teal-400/20 rounded-full blur-3xl -z-10"></div>
+
+              {/* Decorative circle */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-br from-blue-600/10 to-[#00C6FF]/10 rounded-full blur-[40px] -z-10"></div>
             </div>
           </div>
         </section>
 
         {/* Features Section */}
         <section id="features" className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
+          <div className="mx-6 sm:mx-12 md:mx-24 lg:mx-40 xl:mx-64">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 tracking-tight">
               Pourquoi choisir Autheeka ?
             </h2>

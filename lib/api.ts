@@ -1,10 +1,19 @@
-export async function fetchGraphQL(query: string, variables: any = {}) {
+import { translateError } from "./errors";
+
+export async function fetchGraphQL(query: string, variables: any = {}, token?: string) {
   try {
-    const res = await fetch("https://api.autheeka.com/graphql", {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    const apiUrl = process.env.NEXT_PUBLIC_GRAPHQL_URL || "https://api.autheeka.com/graphql";
+    const res = await fetch(apiUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({ query, variables }),
       next: { revalidate: 60 },
     });
@@ -12,12 +21,13 @@ export async function fetchGraphQL(query: string, variables: any = {}) {
     const json = await res.json();
     if (json.errors) {
       console.error(json.errors);
-      throw new Error("Failed to fetch GraphQL API");
+      const rawCode = json.errors[0]?.message || "Failed to fetch GraphQL API";
+      throw new Error(translateError(rawCode));
     }
 
     return json.data;
   } catch (error) {
     console.error("Error fetching GraphQL:", error);
-    return null;
+    throw error;
   }
 }
