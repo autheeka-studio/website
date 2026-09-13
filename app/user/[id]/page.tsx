@@ -122,7 +122,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
       <div className="w-full relative bg-gray-100 overflow-hidden">
         {/* The actual background image from Flutter */}
         <div className="absolute inset-0">
-          <img src="/images/profile_hero.png" className="w-full h-full object-cover opacity-80" alt="Background" />
+          <img src="/images/profile_hero.png" className="w-full object-cover opacity-80" alt="Background" />
         </div>
         {/* Gradient overlay just like flutter: surface color fading in */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 via-gray-50/80 to-gray-50"></div>
