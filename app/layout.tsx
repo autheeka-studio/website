@@ -34,8 +34,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${inter.variable} ${poppins.variable} antialiased overflow-x-hidden`}>
-      <body className="min-h-screen flex flex-col bg-white text-gray-900 font-sans overflow-x-hidden">
+    <html lang="fr" className={`${inter.variable} ${poppins.variable} antialiased`}>
+      <body className="min-h-screen flex flex-col bg-white text-gray-900 font-sans">
         <GoogleOAuthProvider clientId="807727177798-38gu4jfsscdtnh9otl9r7temp9sanq9a.apps.googleusercontent.com">
           <AuthProvider>
             <header className="sticky top-0 z-[100] w-full bg-white/80 backdrop-blur-md border-b border-gray-100">

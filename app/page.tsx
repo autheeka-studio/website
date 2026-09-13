@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <main className="flex-1 overflow-x-hidden">
+      <main className="flex-1">
         {/* Hero Section */}
-        <section className="pt-20 lg:pt-40 pb-20 min-h-screen flex items-center">
+        <section className="pt-20 lg:pt-40 pb-20 min-h-screen flex items-center overflow-x-hidden">
           <div className="mx-6 sm:mx-12 md:mx-24 lg:mx-40 xl:mx-64 grid lg:grid-cols-2 gap-12 gap-y-24  items-center">
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
               <div className="inline-block px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-semibold mb-6">

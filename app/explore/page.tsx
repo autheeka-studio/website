@@ -225,7 +225,7 @@ export default async function ExplorePage() {
                       ))}
                     </div>
                   ) : (
-                    <div className="flex overflow-x-auto pb-6 -mx-6 sm:-mx-12 md:-mx-24 lg:-mx-40 xl:-mx-64 px-6 sm:px-12 md:px-24 lg:px-40 xl:px-64 gap-6 hide-scrollbar">
+                    <div className="flex overflow-x-auto pb-6 -mx-4 sm:-mx-12 md:-mx-24 lg:-mx-40 xl:-mx-64 px-4 sm:px-12 md:px-24 lg:px-40 xl:px-64 gap-6 hide-scrollbar">
                       {/* Horizontal scroll container (Old Web Design) */}
                       {block.events.map((event: any) => (
                         <Link
