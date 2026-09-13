@@ -129,11 +129,11 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
 
         <div className="relative pt-12 pb-32 px-4 flex flex-col items-center">
           {/* Avatar with gradient border */}
-          <div className="p-1 rounded-full bg-gradient-to-br from-blue-600 to-blue-300 shadow-xl relative z-10">
+          <div className="p-1 rounded-full bg-gradient-to-br from-blue-600 to-blue-300 shadow-sm relative z-10">
             <div className="p-1 rounded-full bg-white">
-              <div className="w-[110px] h-[110px] rounded-full overflow-hidden bg-gray-200 border-2 border-white shadow-inner">
+              <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-200 border-2 border-white shadow-inner">
                 {user.picture ? (
-                  <img
+                  <img  
                     src={avatarUrl}
                     alt={user.name}
                     className="w-full h-full object-cover"
@@ -146,11 +146,11 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
               </div>
             </div>
           </div>
-
+                
           {/* Name and Badge */}
           <div className="mt-4 flex items-center justify-center gap-2 relative z-10">
-            <h1 className="text-3xl font-bold text-gray-900 drop-shadow-sm">{user.name}</h1>
-            <VerifiedBadge badge={user.badge} className="w-6 h-6" />
+            <h1 className="text-2xl font-bold text-gray-900 drop-shadow-xs">{user.name}</h1>
+            <VerifiedBadge badge={user.badge} className="w-5.5 h-5.5" />
           </div>
 
           {/* Social Links */}
@@ -190,8 +190,8 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
         {/* Events Section */}
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-8">
           <div className="flex items-center gap-3 mb-8 text-gray-900 border-b border-gray-100 pb-4">
-            <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-            <h2 className="text-2xl font-bold">Événements créés</h2>
+            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <h2 className="text-xl font-bold">Événements créés</h2>
           </div>
 
           {events && events.length > 0 ? (
