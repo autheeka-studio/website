@@ -29,7 +29,7 @@ function EmailAuthForm() {
     }
   }, [isAuthenticated, initialEmail, router]);
 
-  if (!initialEmail) {
+  if (isAuthenticated || !initialEmail) {
     return null;
   }
 
@@ -107,6 +107,7 @@ function EmailAuthForm() {
                 type="text"
                 name="name"
                 autoComplete="name"
+                autoFocus={!isLogin ? true : false}
                 required
                 className="appearance-none rounded-full relative block w-full pl-[52px] pr-4 py-[18px] border border-black/5 placeholder-gray-500 text-gray-900 focus:outline-none focus:border-blue-500 focus:border-[1.5px] text-[16px] font-medium bg-white/80 transition-all"
                 placeholder="Nom complet"
@@ -126,6 +127,7 @@ function EmailAuthForm() {
               type="password"
               name="password"
               autoComplete={isLogin ? "current-password" : "new-password"}
+              autoFocus={isLogin ? true : false}
               required
               className="appearance-none rounded-full relative block w-full pl-[52px] pr-4 py-[18px] border border-black/5 placeholder-gray-500 text-gray-900 focus:outline-none focus:border-blue-500 focus:border-[1.5px] text-[16px] font-medium bg-white/80 transition-all"
               placeholder="Mot de passe"

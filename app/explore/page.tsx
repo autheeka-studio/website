@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { fetchGraphQL } from "@/lib/api";
 import { getMediaVariant } from "@/lib/utils";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Explorer les événements | Autheeka",
+  description: "Découvrez les meilleurs événements à venir avec Autheeka.",
+};
 
 const CalendarIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -13,6 +19,16 @@ const MapPinIcon = ({ className }: { className?: string }) => (
     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />
   </svg>
 );
+
+const VerifiedBadge = ({ badge, className = "w-4 h-4" }: { badge: string, className?: string }) => {
+  if (badge !== 'GOLD' && badge !== 'SILVER') return null;
+  const color = badge === 'GOLD' ? 'text-green-500' : 'text-blue-500';
+  return (
+    <svg className={`${className} ${color}`} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.1l-3.83-3.83 1.41-1.41 2.42 2.41 5.66-5.65 1.41 1.41-7.07 7.07z" />
+    </svg>
+  );
+}
 
 // The GraphQL query for the Home Feed
 const GET_HOME_FEED = `
@@ -79,15 +95,16 @@ export default async function ExplorePage() {
 
         {/* Top Actualities Row (Like Flutter App Sliver) */}
         {topActualities.length > 0 && (
-          <div className="-mx-4 sm:-mx-12 md:-mx-24 lg:-mx-40 xl:-mx-64 bg-[#242424] py-8">
+          <div className="-mx-4 sm:-mx-12 md:-mx-24 lg:-mx-40 xl:-mx-64 bg-gradient-to-br from-blue-600/30 to-indigo-600/15 py-8">
             <div className="flex overflow-x-auto pb-4 px-4 sm:px-12 md:px-24 lg:px-40 xl:px-64 gap-3 hide-scrollbar after:content-[''] after:w-px after:shrink-0">
               {topActualities.map((actuality: any) => {
                 const isViewed = actuality.isViewed;
                 return (
-                  <div
+                  <Link
                     key={actuality.id}
+                    href={`/actuality/${actuality.id}`}
                     className={`shrink-0 w-[100px] h-[140px] group flex flex-col rounded-[25px] overflow-hidden relative cursor-pointer border-[2px] p-[1.5px] transition-transform hover:scale-100 ${isViewed ? 'border-gray-600' : 'border-blue-600'}`}
-                    title="Téléchargez l'application Autheeka pour découvrir nos actualités en détail !"
+                    title="Voir cette actualité dans l'application"
                   >
                     <div className="w-full h-full rounded-[23px] overflow-hidden relative bg-gray-800">
                       {actuality.picture ? (
@@ -116,13 +133,18 @@ export default async function ExplorePage() {
                         </div>
                       )}
 
-                      <div className="absolute bottom-2 left-1 right-1 text-center z-10">
-                        <p className="text-[11.5px] font-bold text-white drop-shadow-md line-clamp-2 leading-tight">
+                      <div className="absolute bottom-2 left-1 right-1 z-10 px-0.5">
+                        <p className="text-[11.5px] font-bold text-white drop-shadow-md line-clamp-2 leading-tight text-center">
                           {actuality.user?.name}
+                          {actuality.user?.badge && (
+                            <span className="inline-block align-middle ml-0.5 relative -top-[1px]">
+                              <VerifiedBadge badge={actuality.user.badge} className="w-3 h-3" />
+                            </span>
+                          )}
                         </p>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>
@@ -133,7 +155,7 @@ export default async function ExplorePage() {
           <h1 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Explorez</h1>
           <p className="text-gray-500 mt-2">Découvrez les meilleurs événements du moment.</p>
         </div>
-        
+
         <div className="space-y-12">
           {feedBlocks.map((block: any, index: number) => {
             const typename = block.__typename;

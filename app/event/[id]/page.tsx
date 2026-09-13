@@ -1,8 +1,9 @@
 import Link from "next/link";
+import ShareButton from "./ShareButton";
 import { notFound } from "next/navigation";
 import { fetchGraphQL } from "@/lib/api";
 import { getMediaVariant, formatDate, formatTime } from "@/lib/utils";
-import ShareButton from "./ShareButton";
+import type { Metadata } from "next";
 
 const VerifiedBadge = ({ badge, className = "w-5 h-5" }: { badge: string, className?: string }) => {
   if (badge !== 'GOLD' && badge !== 'SILVER') return null;
@@ -12,6 +13,53 @@ const VerifiedBadge = ({ badge, className = "w-5 h-5" }: { badge: string, classN
       <path d="M23 11.99l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 11.99zm-13.06 5.1l-3.83-3.83 1.41-1.41 2.42 2.41 5.66-5.65 1.41 1.41-7.07 7.07z" />
     </svg>
   );
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const resolvedParams = await params;
+
+  try {
+    const data = await fetchGraphQL(`
+      query GetEventMeta($id: ID!) {
+        event(id: $id) {
+          title
+          description
+          picture
+        }
+      }
+    `, { id: resolvedParams.id });
+
+    const event = data?.event;
+    if (!event) return {
+      title: 'Événement introuvable | Autheeka'
+    };
+
+    const imageUrl = getMediaVariant(event.picture, 'large');
+    return {
+      title: `${event.title} | Autheeka`,
+      description: event.description || "Découvrez cet événement sur Autheeka.",
+      openGraph: {
+        title: `${event.title} | Autheeka`,
+        description: event.description || "Découvrez cet événement sur Autheeka.",
+        images: [
+          {
+            url: imageUrl,
+            width: 1200,
+            height: 630,
+            alt: event.title,
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${event.title} | Autheeka`,
+        description: event.description || "Découvrez cet événement sur Autheeka.",
+        images: [imageUrl],
+      },
+    };
+  } catch (error) {
+    return { title: 'Événement | Autheeka' };
+  }
 }
 
 export default async function EventPage({ params }: { params: Promise<{ id: string }> }) {
@@ -137,7 +185,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
 
           {/* Organizer */}
           <h2 className="text-lg font-bold mb-3">Organisé par</h2>
-          <Link href={`/user/${event.createdBy.id}`} className="flex items-center gap-3 p-3 rounded-2xl border border-gray-100 shadow-sm bg-white hover:bg-gray-50 transition-colors group">
+          <Link href={`/user/${event.createdBy.id}`} className="flex items-center gap-3 p-3 rounded-full vborder   shadow-sm bg-blue-100 hover:bg-blue-200 transition-colors group">
             {event.createdBy.picture ? (
               <img
                 src={getMediaVariant(event.createdBy.picture, 'thumbnail')}
@@ -162,13 +210,13 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
 
         {/* Sticky Action Button inside the main container */}
         <div className="sticky bottom-8 z-50 mt-8">
-          <a
-            href={`autheeka://event/${resolvedParams.id}`}
+          <Link
+            href={`/buy/${resolvedParams.id}`}
             className="flex items-center justify-center gap-2 w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-lg shadow-xl shadow-blue-600/30 transition-transform active:scale-95"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
             <span>Acheter un billet</span>
-          </a>
+          </Link>
         </div>
       </main>
     </div>

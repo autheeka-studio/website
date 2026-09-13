@@ -1,6 +1,10 @@
 import { translateError } from "./errors";
 
-export async function fetchGraphQL(query: string, variables: any = {}, token?: string) {
+export async function fetchGraphQL(
+  query: string,
+  variables: any = {},
+  token?: string,
+) {
   try {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
@@ -10,7 +14,9 @@ export async function fetchGraphQL(query: string, variables: any = {}, token?: s
       headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const apiUrl = process.env.NEXT_PUBLIC_GRAPHQL_URL || "https://api.autheeka.com/graphql";
+    const apiUrl =
+      process.env.NEXT_PUBLIC_GRAPHQL_URL || "https://api.autheeka.com/graphql";
+
     const res = await fetch(apiUrl, {
       method: "POST",
       headers,
