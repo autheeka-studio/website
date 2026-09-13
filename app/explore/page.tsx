@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { fetchGraphQL } from "@/lib/api";
 import { getMediaVariant } from "@/lib/utils";
 import Link from "next/link";
+import { GET_HOME_FEED, GET_LAST_ACTUALITIES_COVERS } from "@/lib/graphql/event";
 
 export const metadata: Metadata = {
   title: "Explorer les événements | Autheeka",
@@ -29,54 +30,6 @@ const VerifiedBadge = ({ badge, className = "w-4 h-4" }: { badge: string, classN
     </svg>
   );
 }
-
-// The GraphQL query for the Home Feed
-const GET_HOME_FEED = `
-  query GetHomeFeed($page: Int!) {
-    getHomeFeed(page: $page) {
-      __typename
-      ... on HorizontalEventListBlock {
-        index
-        title
-        events {
-          id
-          title
-          picture
-          location
-          category
-          date
-        }
-      }
-      ... on BigEventCardBlock {
-        id
-        event {
-          id
-          title
-          picture
-          location
-          category
-          date
-        }
-      }
-    }
-  }
-`;
-
-const GET_LAST_ACTUALITIES_COVERS = `
-  query GetLastActualitiesCovers($page: Int!) {
-    lastActualitiesCovers(page: $page) {
-      id
-      picture
-      user {
-        id
-        name
-        picture
-        badge
-      }
-      isViewed
-    }
-  }
-`;
 
 export default async function ExplorePage() {
   // Fetch the first page of the home feed and the top actualities concurrently
@@ -201,7 +154,7 @@ export default async function ExplorePage() {
                             {event.category}
                           </span>
                         </div>
-                        <h3 className="text-3xl md:text-5xl font-black text-white leading-tight mb-4 transition-colors">
+                        <h3 className="text-3xl md:text-5xl font-black text-white text-shadow-2xl leading-tight mb-4 transition-colors">
                           {event.title}
                         </h3>
 
