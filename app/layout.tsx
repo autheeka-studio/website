@@ -7,6 +7,7 @@ import { AuthNav } from "@/components/AuthNav";
 import { MobileNav } from "@/components/MobileNav";
 import { DesktopNav } from "@/components/DesktopNav";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({
   variable: "--font-inter",
@@ -84,6 +85,7 @@ export default function RootLayout({
             </footer>
           </AuthProvider>
         </GoogleOAuthProvider>
+        <Analytics />
       </body>
     </html>
   );
