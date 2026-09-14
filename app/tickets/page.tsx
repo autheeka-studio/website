@@ -52,7 +52,7 @@ export default function MyTicketsPage() {
   }
 
   return (
-    <main className="flex-1 w-full bg-[#f3f4f6] min-h-[calc(100vh-64px)] py-8 md:py-12">
+    <main className="flex-1 w-full bg-gray-50 min-h-[calc(100vh-64px)] py-8 md:py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="mb-8">

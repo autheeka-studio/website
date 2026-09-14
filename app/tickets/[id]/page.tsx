@@ -61,14 +61,14 @@ export default function TicketDetailsPage() {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="flex-1 w-full bg-[#f3f4f6] min-h-screen flex items-center justify-center">
+      <div className="flex-1 w-full bg-gray-50 min-h-screen flex items-center justify-center">
         <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <main className="flex-1 w-full bg-[#f3f4f6] min-h-[calc(100vh-64px)] py-8 md:py-12">
+    <main className="flex-1 w-full bg-gray-50 min-h-[calc(100vh-64px)] py-8 md:py-12">
       <div className="max-w-xl mx-auto px-4 sm:px-6">
 
         <div className="mb-6">
@@ -95,22 +95,22 @@ export default function TicketDetailsPage() {
 
             {/* QR Code Section */}
             {ticket.selfPurchase !== false ? (
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col items-center mx-auto w-min">
-                <div className="py-1 px-4 rounded-2xl mb-2">
+              <div className="bg-white rounded-xl px-6 py-4 shadow-xs border border-gray-100 flex flex-col items-center mx-auto w-min">
+                <div className="rounded-3xl mb-2">
                   {ticketCode ? (
                     <QRCode
                       value={ticketCode}
-                      size={200}
+                      size={220}
                       qrStyle="dots"
                       fgColor="#1e3a8a"
-                      eyeRadius={100}
+                      eyeRadius={200}
                     />
                   ) : (
                     <div className="w-[200px] h-[200px] bg-red-50 flex flex-col items-center justify-center text-red-500 rounded-xl">
                       <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
-                      <span className="text-sm font-semibold">Code indisponible</span>
+                      <span className="text-sm font-semibold">Erreur !</span>
                     </div>
                   )}
                 </div>
@@ -164,8 +164,8 @@ export default function TicketDetailsPage() {
             <h2 className="text-lg font-bold text-gray-900 px-2 mt-2">Bénéficiaire & Achat</h2>
             <div className="space-y-3">
               {ticket.ownerName && (
-                <div className="bg-white p-4 rounded-2xl border border-blue-100/50">
-                  <div className="flex items-center text-blue-600 mb-2">
+                <div className="bg-blue-100/30 p-4 rounded-2xl border border-blue-100/50">
+                  <div className="flex items-center text-blue-700 mb-2">
                     <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
@@ -176,8 +176,8 @@ export default function TicketDetailsPage() {
               )}
 
               {ticket.ownerPhone && (
-                <div className="bg-white p-4 rounded-2xl border border-blue-100/50">
-                  <div className="flex items-center text-blue-600 mb-2">
+                <div className="bg-blue-100/30 p-4 rounded-2xl border border-blue-100/50">
+                  <div className="flex items-center text-blue-700 mb-2">
                     <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
@@ -188,8 +188,8 @@ export default function TicketDetailsPage() {
               )}
 
               {ticket.ownerEmail && (
-                <div className="bg-white p-4 rounded-2xl border border-blue-100/50">
-                  <div className="flex items-center text-blue-600 mb-2">
+                <div className="bg-blue-100/30 p-4 rounded-2xl border border-blue-100/50">
+                  <div className="flex items-center text-blue-700 mb-2">
                     <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
@@ -199,8 +199,8 @@ export default function TicketDetailsPage() {
                 </div>
               )}
 
-              <div className="bg-white p-4 rounded-2xl border border-blue-100/50 mt-4">
-                <div className="flex items-center text-blue-600 mb-2">
+              <div className="bg-blue-100/30 p-4 rounded-2xl border border-blue-100/50 mt-4">
+                <div className="flex items-center text-blue-700 mb-2">
                   <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -216,7 +216,7 @@ export default function TicketDetailsPage() {
             <div className="mt-8 mb-4">
               <Link
                 href={`/buy/${ticket.event.id}`}
-                className="w-full flex items-center justify-center gap-2 bg-blue-100/80 text-blue-900 font-bold py-3.5 px-6 rounded-full hover:bg-blue-200 transition-colors"
+                className="w-full flex items-center justify-center gap-2 bg-blue-200/80 text-blue-900 font-bold py-3.5 px-6 rounded-full hover:bg-blue-200 transition-colors"
               >
                 <svg className="w-5 h-5 text-blue-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor">
                   <path d="M224,96a8,8,0,0,1-8,8,24,24,0,0,0,0,48,8,8,0,0,1,8,8v32a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V160a8,8,0,0,1,8-8,24,24,0,0,0,0-48,8,8,0,0,1-8-8V64A16,16,0,0,1,48,48H208a16,16,0,0,1,16,16Zm-16-32H48V82a40,40,0,0,1,0,92v18H208V174a40,40,0,0,1,0-92ZM96,160a8,8,0,0,1-8-8V104a8,8,0,0,1,16,0v48A8,8,0,0,1,96,160Zm32,0a8,8,0,0,1-8-8V104a8,8,0,0,1,16,0v48A8,8,0,0,1,128,160Zm32,0a8,8,0,0,1-8-8V104a8,8,0,0,1,16,0v48A8,8,0,0,1,160,160Z" />

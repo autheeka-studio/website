@@ -33,7 +33,7 @@ export default function CreateEventRedirectPage() {
   }, []);
 
   return (
-    <main className="flex-1 w-full bg-[#f3f4f6] min-h-[calc(100vh-64px)] flex items-center justify-center p-4">
+    <main className="flex-1 w-full bg-gray-50 min-h-[calc(100vh-64px)] flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center">
         {!redirectFailed ? (
           <>

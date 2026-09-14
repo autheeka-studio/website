@@ -60,6 +60,8 @@ export function translateError(errorCode: string): string {
       return "Cet événement a déjà des billets vendus.";
     case "has_future_events":
       return "Vous avez des événements à venir avec des billets vendus.";
+    case "event_passed":
+      return "La vente de billets pour cet événement est clôturée.";
 
     // WALLET & PAYMENT
     case "wallet_not_found":
