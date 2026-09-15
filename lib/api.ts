@@ -14,7 +14,7 @@ export async function fetchGraphQL(
       headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const apiUrl = "http://localhost:3000/graphql" ||
+    const apiUrl =
       process.env.NEXT_PUBLIC_GRAPHQL_URL || "https://api.autheeka.com/graphql";
 
     const res = await fetch(apiUrl, {
