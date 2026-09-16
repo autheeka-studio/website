@@ -28,7 +28,7 @@ export default function Home() {
                 L'esprit tranquille, du billet à l'entrée.
               </p>
               <div className="flex gap-4">
-                <a href="#" className="hover:-translate-y-1 transition-transform">
+                <a href="https://play.google.com/store/apps/details?id=com.autheeka.ticketing" className="hover:-translate-y-1 transition-transform">
                   <img
                     src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
                     alt="Disponible sur Google Play"

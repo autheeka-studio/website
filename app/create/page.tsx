@@ -8,7 +8,7 @@ export default function CreateEventRedirectPage() {
 
   useEffect(() => {
     const deepLink = process.env.NEXT_PUBLIC_APP_DEEP_LINK_CREATE_EVENT || "autheeka://create";
-    
+
     // Attempt to redirect to the app
     window.location.href = deepLink;
 
@@ -50,10 +50,10 @@ export default function CreateEventRedirectPage() {
             </div>
             <h1 className="text-xl font-bold text-gray-900 mb-2">Application introuvable</h1>
             <p className="text-gray-500 mb-8">Il semble que vous n'ayez pas encore l'application Autheeka. Téléchargez-la pour créer et gérer vos événements.</p>
-            
+
             <div className="flex justify-center mt-6">
-              <a 
-                href={process.env.NEXT_PUBLIC_PLAY_STORE_LINK || "#"}
+              <a
+                href="https://play.google.com/store/apps/details?id=com.autheeka.ticketing"
                 className="hover:-translate-y-1 transition-transform inline-block"
                 target="_blank"
                 rel="noopener noreferrer"
