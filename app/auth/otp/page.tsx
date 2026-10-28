@@ -137,7 +137,7 @@ function OtpForm() {
   if (!email || isAuthenticated) return null;
 
   return (
-    <GlassCard className="relative z-10 w-full max-w-[420px]">
+    <GlassCard className="relative z-10 w-full max-w-105">
       <div className="text-center mb-6">
         <h2 className="text-[20px] font-semibold text-[#1e293b] mb-2 leading-snug">
           Vérification du code
@@ -185,7 +185,7 @@ function OtpForm() {
         <button
           type="submit"
           disabled={loading || otp.join("").length !== 6}
-          className="w-full flex justify-center py-[15px] px-4 text-[16px] font-semibold rounded-full text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:opacity-95 transition-all shadow-[0_4px_12px_rgba(53,134,197,0.35)] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex justify-center py-3.75 px-4 text-[16px] font-semibold rounded-full text-white bg-linear-to-r from-blue-500 to-blue-700 hover:opacity-95 transition-all shadow-[0_4px_12px_rgba(53,134,197,0.35)] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

@@ -14,7 +14,7 @@ export function AuthEmailBadge({ email, onEdit }: AuthEmailBadgeProps) {
     >
       <span className="font-semibold text-[15px] truncate max-w-[85%]">{email}</span>
       <svg
-        className="w-4 h-4 text-blue-700 flex-shrink-0 group-hover:scale-110 transition-transform"
+        className="w-4 h-4 text-blue-700 shrink-0 group-hover:scale-110 transition-transform"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"

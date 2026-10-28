@@ -149,7 +149,7 @@ function RequirementItem({ label, isValid }: { label: string; isValid: boolean }
         }`}
       >
         <svg
-          className="w-2.5 h-2.5 stroke-[3]"
+          className="w-2.5 h-2.5 stroke-3"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

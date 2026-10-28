@@ -81,7 +81,7 @@ function ForgotPasswordForm() {
       <form className="space-y-4" onSubmit={handleSubmit}>
         {!initialEmail && (
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-[18px] flex items-center pointer-events-none z-10 text-gray-500">
+            <div className="absolute inset-y-0 left-0 pl-4.5 flex items-center pointer-events-none z-10 text-gray-500">
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
@@ -97,7 +97,7 @@ function ForgotPasswordForm() {
               autoComplete="email"
               autoFocus
               required
-              className="appearance-none rounded-full relative block w-full pl-[50px] pr-4 py-[16px] border border-black/5 placeholder-gray-400 text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-[15px] font-medium bg-white/80 transition-all"
+              className="appearance-none rounded-full relative block w-full pl-12.5 pr-4 py-4 border border-black/5 placeholder-gray-400 text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-[15px] font-medium bg-white/80 transition-all"
               placeholder="Adresse e-mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -108,7 +108,7 @@ function ForgotPasswordForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex justify-center py-[15px] px-4 text-[16px] font-semibold rounded-full text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:opacity-95 transition-all shadow-[0_4px_12px_rgba(53,134,197,0.35)] disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full flex justify-center py-3.75 px-4 text-[16px] font-semibold rounded-full text-white bg-linear-to-r from-blue-500 to-blue-700 hover:opacity-95 transition-all shadow-[0_4px_12px_rgba(53,134,197,0.35)] disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {loading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
