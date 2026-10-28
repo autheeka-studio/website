@@ -48,6 +48,8 @@ export function translateError(errorCode: string): string {
       return "Ce compte est déjà vérifié.";
     case "verification_pending":
       return "Veuillez vérifier votre compte avant de continuer.";
+    case "password_reset_failed":
+      return "La réinitialisation du mot de passe a échoué. Veuillez réessayer.";
 
     // TICKETS & EVENTS
     case "event_not_found":

@@ -6,6 +6,7 @@ export const MUTATION_LOGIN = `
       user {
         id
         name
+        email
         picture
         badge
       }
@@ -27,13 +28,13 @@ export const MUTATION_SOCIAL_LOGIN = `
       user {
         id
         name
+        email
         picture
         badge
       }
     }
   }
 `;
-
 
 export const QUERY_ME = `
   query Me {
@@ -47,14 +48,61 @@ export const QUERY_ME = `
   }
 `;
 
-export const MUTATION_CONFIRM_EMAIL = `
-  mutation ConfirmEmail($email: String!, $otp: String!) {
-    confirmEmail(email: $email, otp: $otp) {
+export const MUTATION_REFRESH_TOKEN = `
+  mutation RefreshToken($token: String!) {
+    refreshToken(token: $token) {
       token
       refreshToken
       user {
         id
         name
+        email
+        picture
+        badge
+      }
+    }
+  }
+`;
+
+export const MUTATION_VERIFY_REGISTRATION_OTP = `
+  mutation VerifyRegistrationOtp($email: String!, $otp: String!) {
+    verifyRegistrationOtp(email: $email, otp: $otp) {
+      token
+      refreshToken
+      user {
+        id
+        name
+        email
+        picture
+        badge
+      }
+    }
+  }
+`;
+
+export const MUTATION_CONFIRM_EMAIL = MUTATION_VERIFY_REGISTRATION_OTP;
+
+export const MUTATION_REQUEST_PASSWORD_RESET = `
+  mutation RequestPasswordReset($email: String!) {
+    requestPasswordReset(email: $email)
+  }
+`;
+
+export const MUTATION_VERIFY_RESET_PASSWORD_OTP = `
+  mutation VerifyResetPasswordOtp($email: String!, $otp: String!) {
+    verifyResetPasswordOtp(email: $email, otp: $otp)
+  }
+`;
+
+export const MUTATION_RESET_PASSWORD = `
+  mutation ResetPassword($email: String!, $otp: String!, $newPassword: String!) {
+    resetPassword(email: $email, otp: $otp, newPassword: $newPassword) {
+      token
+      refreshToken
+      user {
+        id
+        name
+        email
         picture
         badge
       }

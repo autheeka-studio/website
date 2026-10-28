@@ -3,26 +3,36 @@
 import { useState, useRef, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
+import { fetchGraphQL } from "@/lib/api";
+import {
+  MUTATION_REQUEST_PASSWORD_RESET,
+  MUTATION_VERIFY_RESET_PASSWORD_OTP,
+} from "@/lib/graphql/auth";
 import { AuthBackground } from "@/components/AuthBackground";
 import { GlassCard } from "@/components/GlassCard";
 
 function OtpForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { confirmEmail } = useAuth();
+  const { confirmEmail, isAuthenticated } = useAuth();
 
   const email = searchParams.get("email") || "";
+  const isResetPassword = searchParams.get("reset") === "true";
 
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    if (!email) {
+    if (isAuthenticated) {
+      router.push("/explore");
+    } else if (!email) {
       router.push("/auth/main");
     }
-  }, [email, router]);
+  }, [isAuthenticated, email, router]);
 
   const handleChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return;
@@ -50,9 +60,27 @@ function OtpForm() {
       }
     });
     setOtp(newOtp);
-    const nextEmptyIndex = newOtp.findIndex(val => val === "");
+    const nextEmptyIndex = newOtp.findIndex((val) => val === "");
     const focusIndex = nextEmptyIndex === -1 ? 5 : nextEmptyIndex;
     inputRefs.current[focusIndex]?.focus();
+  };
+
+  const handleResend = async () => {
+    if (!isResetPassword || resending || loading) return;
+    setResending(true);
+    setError("");
+    setInfo("");
+
+    try {
+      await fetchGraphQL(MUTATION_REQUEST_PASSWORD_RESET, { email });
+      setInfo("Un nouveau code de réinitialisation a été envoyé.");
+      setOtp(["", "", "", "", "", ""]);
+      inputRefs.current[0]?.focus();
+    } catch (err: any) {
+      setError(err.message || "Impossible de renvoyer le code.");
+    } finally {
+      setResending(false);
+    }
   };
 
   const handleSubmit = async (e?: React.FormEvent) => {
@@ -60,44 +88,81 @@ function OtpForm() {
     const otpCode = otp.join("");
 
     if (otpCode.length !== 6) {
-      setError("Veuillez entrer le code complet.");
+      setError("Veuillez entrer le code à 6 chiffres.");
       return;
     }
 
     setLoading(true);
     setError("");
+    setInfo("");
 
     try {
-      await confirmEmail(email, otpCode);
-      router.push("/");
+      if (isResetPassword) {
+        // Valide le code pour le reset password puis redirige vers /auth/reset-password
+        const data = await fetchGraphQL(MUTATION_VERIFY_RESET_PASSWORD_OTP, {
+          email,
+          otp: otpCode,
+        });
+        if (data?.verifyResetPasswordOtp === true) {
+          router.push(
+            `/auth/reset-password?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(
+              otpCode
+            )}`
+          );
+          return;
+        }
+        throw new Error("Code de réinitialisation invalide.");
+      } else {
+        // Valide l'inscription
+        await confirmEmail(email, otpCode);
+        router.push("/explore");
+      }
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Code incorrect ou expiré.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (!email) return null;
+  // Masked email display like Flutter: "r***@gmail.com"
+  const maskEmail = (mail: string) => {
+    const parts = mail.split("@");
+    if (parts.length !== 2) return mail;
+    const name = parts[0];
+    const domain = parts[1];
+    if (name.length <= 2) return `${name[0]}***@${domain}`;
+    return `${name.slice(0, 2)}***@${domain}`;
+  };
+
+  if (!email || isAuthenticated) return null;
 
   return (
-    <GlassCard className="relative z-10 w-full max-w-[400px]">
-      <div className="text-center mb-8">
-        <h2 className="text-[24px] font-bold text-[#1e293b] mb-2 tracking-tight">
+    <GlassCard className="relative z-10 w-full max-w-[420px]">
+      <div className="text-center mb-6">
+        <h2 className="text-[20px] font-semibold text-[#1e293b] mb-2 leading-snug">
           Vérification du code
         </h2>
-        <p className="text-sm font-medium text-black/60">
-          Entrez le code que nous avons envoyé à votre adresse e-mail.
+        <p className="text-[14px] text-gray-600 mb-1">
+          Entrez le code envoyé à votre adresse e-mail :
         </p>
+        <p className="text-[15px] font-semibold text-blue-600">{maskEmail(email)}</p>
       </div>
 
-      <form className="space-y-8" onSubmit={handleSubmit}>
+      <form className="space-y-6" onSubmit={handleSubmit}>
         {error && (
-          <div className="bg-red-50 text-red-600 text-sm font-medium p-4 rounded-2xl text-center">
+          <div className="bg-red-50 text-red-600 text-sm font-medium p-3.5 rounded-2xl text-center">
             {error}
           </div>
         )}
 
-        <div className="flex justify-between items-center gap-2">
+        {info && (
+          <div className="bg-blue-50 text-blue-600 text-sm font-medium p-3.5 rounded-2xl text-center">
+            {info}
+          </div>
+        )}
+
+        {/* 6 OTP Input Boxes */}
+        <div className="flex justify-center items-center gap-2 sm:gap-3">
           {otp.map((digit, index) => (
             <input
               key={index}
@@ -111,44 +176,50 @@ function OtpForm() {
               onChange={(e) => handleChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={handlePaste}
-              className={`w-12 h-14 text-center text-2xl font-bold bg-white/80 rounded-xl border ${error ? 'border-red-500 focus:border-red-500' : 'border-black/5 focus:border-blue-500'} focus:outline-none focus:border-[1.5px] text-gray-900 transition-all`}
+              autoFocus={index === 0}
+              className="w-12 h-13 text-center text-xl font-bold bg-white/80 border border-black/10 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-all"
             />
           ))}
         </div>
 
+        <button
+          type="submit"
+          disabled={loading || otp.join("").length !== 6}
+          className="w-full flex justify-center py-[15px] px-4 text-[16px] font-semibold rounded-full text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:opacity-95 transition-all shadow-[0_4px_12px_rgba(53,134,197,0.35)] disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            "Vérifier le code"
+          )}
+        </button>
+
+        {isResetPassword && (
+          <div className="text-center pt-1">
+            <p className="text-[14px] text-gray-600">
+              Vous n'avez pas reçu le code ?{" "}
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={resending}
+                className="font-semibold text-blue-600 hover:underline inline disabled:opacity-50"
+              >
+                {resending ? "Envoi..." : "Renvoyer"}
+              </button>
+            </p>
+          </div>
+        )}
+
         <div className="pt-2">
           <button
-            type="submit"
-            disabled={loading}
-            className="group relative w-full flex justify-center py-[16px] px-4 text-[16px] font-semibold rounded-full text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:opacity-90 transition-all shadow-[0_4px_12px_var(--color-blue-500)] shadow-blue-500/30 disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            ) : (
-              "Vérifier le code"
-            )}
-          </button>
-        </div>
-
-        <div className="text-center mt-6">
-          <p className="text-sm text-black/60 font-medium">
-            Vous n'avez pas reçu de code ?{" "}
-            <button type="button" className="text-blue-500 font-semibold hover:text-blue-600 transition-colors">
-              Renvoyer
-            </button>
-          </p>
-        </div>
-
-        <div className="mt-4 pt-2">
-          <button
             type="button"
-            onClick={() => router.push(`/auth/email?isLogin=false&email=${encodeURIComponent(email)}`)}
-            className="w-full flex justify-center items-center gap-2 py-2 text-sm text-blue-500 hover:text-blue-600 transition-colors font-semibold"
+            onClick={() => router.back()}
+            className="w-full flex justify-center items-center gap-2 py-2 text-sm text-blue-600 hover:text-blue-700 transition-colors font-semibold"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Annuler
+            Retour
           </button>
         </div>
       </form>
@@ -159,13 +230,14 @@ function OtpForm() {
 export default function OtpPage() {
   return (
     <AuthBackground>
-      <div className="w-full flex flex-col items-center justify-center p-6 min-h-[100dvh]">
-        {/* <div className="mb-10 w-full max-w-[400px] flex justify-center items-center gap-2">
-          <img src="/logo_icon.png" alt="Autheeka Icon" className="h-6" />
-          <img src="/logo_text.png" alt="Autheeka Text" className="h-6" />
-        </div> */}
-
-        <Suspense fallback={<div className="flex justify-center"><div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+      <div className="flex-1 flex flex-col items-center justify-center relative py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
+        <Suspense
+          fallback={
+            <div className="flex justify-center">
+              <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          }
+        >
           <OtpForm />
         </Suspense>
 

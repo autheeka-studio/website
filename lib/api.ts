@@ -21,7 +21,7 @@ export async function fetchGraphQL(
       method: "POST",
       headers,
       body: JSON.stringify({ query, variables }),
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
 
     const json = await res.json();
