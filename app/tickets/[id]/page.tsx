@@ -15,16 +15,10 @@ import { getMediaVariant } from "@/lib/utils";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { QRCode } from "react-qrcode-logo";
-
-type PaymentMethod = "INTERNAL_FUND" | "CARD" | "MONCASH" | "PAYPAL" | "CASHAPP";
-
-/**
- * Payment methods offered on the website (same as the app).
- * External methods (CARD, MONCASH...) are handled too: add them here when they are available.
- */
-const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
-  { value: "INTERNAL_FUND", label: "Portefeuille Autheeka" },
-];
+import {
+  PaymentMethod,
+  SelectPaymentMethodModal,
+} from "@/components/SelectPaymentMethodModal";
 
 export default function TicketDetailsPage() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -37,7 +31,7 @@ export default function TicketDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("INTERNAL_FUND");
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -82,7 +76,11 @@ export default function TicketDetailsPage() {
     loadTicketDetails();
   }, [isAuthenticated, ticketId]);
 
-  const handlePayNow = async () => {
+  // Same flow as the app: "Payer maintenant" opens the payment method choice,
+  // the payment only starts after "Continuer"
+  const handlePayNow = () => setPaymentModalOpen(true);
+
+  const payTicket = async (paymentMethod: PaymentMethod) => {
     const paymentId = ticket?.payment?.id;
     if (!paymentId) return;
     try {
@@ -187,27 +185,6 @@ export default function TicketDetailsPage() {
                     {ticket.payment.price} {ticket.payment.currency}
                   </p>
                 </div>
-                {/* Payment method (only when there is a choice) */}
-                {PAYMENT_METHODS.length > 1 && (
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {PAYMENT_METHODS.map((method) => (
-                      <button
-                        key={method.value}
-                        type="button"
-                        onClick={() => setPaymentMethod(method.value)}
-                        disabled={actionLoading}
-                        aria-pressed={paymentMethod === method.value}
-                        className={`px-4 py-2 rounded-full text-sm font-semibold border transition-colors disabled:opacity-50 ${
-                          paymentMethod === method.value
-                            ? "bg-blue-600 text-white border-blue-600"
-                            : "bg-white text-gray-700 border-gray-200 hover:border-blue-300"
-                        }`}
-                      >
-                        {method.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
                 <div className="flex flex-col sm:flex-row gap-3 pt-2 justify-center">
                   <button
                     onClick={handlePayNow}
@@ -360,6 +337,11 @@ export default function TicketDetailsPage() {
         ) : null}
 
       </div>
+      <SelectPaymentMethodModal
+        open={paymentModalOpen}
+        onClose={() => setPaymentModalOpen(false)}
+        onSelect={payTicket}
+      />
     </main>
   );
 }
