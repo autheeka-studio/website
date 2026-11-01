@@ -4,11 +4,27 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { useRouter, useParams } from "next/navigation";
 import { fetchGraphQL } from "@/lib/api";
-import { GET_TICKET_DETAILS, GET_TICKET_CODE } from "@/lib/graphql/ticket";
+import {
+  GET_TICKET_DETAILS,
+  GET_TICKET_CODE,
+  PAY_TICKET_BY_INTERNAL_WALLET,
+  PAY_TICKET_BY_EXTERNAL_PAYMENT,
+  CANCEL_TICKET,
+} from "@/lib/graphql/ticket";
 import { getMediaVariant } from "@/lib/utils";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { QRCode } from "react-qrcode-logo";
+
+type PaymentMethod = "INTERNAL_FUND" | "CARD" | "MONCASH" | "PAYPAL" | "CASHAPP";
+
+/**
+ * Payment methods offered on the website (same as the app).
+ * External methods (CARD, MONCASH...) are handled too: add them here when they are available.
+ */
+const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
+  { value: "INTERNAL_FUND", label: "Portefeuille Autheeka" },
+];
 
 export default function TicketDetailsPage() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -20,6 +36,8 @@ export default function TicketDetailsPage() {
   const [ticketCode, setTicketCode] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [actionLoading, setActionLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("INTERNAL_FUND");
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -27,37 +45,96 @@ export default function TicketDetailsPage() {
     }
   }, [isLoading, isAuthenticated, router]);
 
-  useEffect(() => {
-    const loadTicketDetails = async () => {
-      if (!isAuthenticated || !ticketId) return;
-      try {
-        setLoading(true);
-        const token = Cookies.get("autheeka_token");
+  const loadTicketDetails = async () => {
+    if (!isAuthenticated || !ticketId) return;
+    try {
+      setLoading(true);
+      const token = Cookies.get("autheeka_token");
 
-        // Fetch both ticket details and ticket code concurrently
-        const [detailsData, codeData] = await Promise.all([
-          fetchGraphQL(GET_TICKET_DETAILS, { id: ticketId }, token),
-          fetchGraphQL(GET_TICKET_CODE, { id: ticketId }, token)
-        ]);
+      // 1. Fetch ticket details first
+      const detailsData = await fetchGraphQL(GET_TICKET_DETAILS, { id: ticketId }, token);
 
-        if (detailsData?.ticket) {
-          setTicket(detailsData.ticket);
-        } else {
-          setError("Billet introuvable.");
+      if (detailsData?.ticket) {
+        setTicket(detailsData.ticket);
+
+        // 2. Fetch ticket code only if the ticket is paid and selfPurchase is true
+        if (detailsData.ticket.payment?.paid !== false && detailsData.ticket.selfPurchase !== false) {
+          try {
+            const codeData = await fetchGraphQL(GET_TICKET_CODE, { id: ticketId }, token);
+            if (codeData?.ticketCode) {
+              setTicketCode(codeData.ticketCode);
+            }
+          } catch {
+            // Non-blocking code fetch error
+          }
         }
-
-        if (codeData?.ticketCode) {
-          setTicketCode(codeData.ticketCode);
-        }
-      } catch (err: any) {
-        setError(err.message || "Erreur lors du chargement des détails du billet");
-      } finally {
-        setLoading(false);
+      } else {
+        setError("Billet introuvable.");
       }
-    };
+    } catch (err: any) {
+      setError(err.message || "Erreur lors du chargement des détails du billet");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadTicketDetails();
   }, [isAuthenticated, ticketId]);
+
+  const handlePayNow = async () => {
+    const paymentId = ticket?.payment?.id;
+    if (!paymentId) return;
+    try {
+      setActionLoading(true);
+      const token = Cookies.get("autheeka_token");
+
+      // Internal wallet: paid immediately, reload the ticket to show its code
+      if (paymentMethod === "INTERNAL_FUND") {
+        const res = await fetchGraphQL(PAY_TICKET_BY_INTERNAL_WALLET, { paymentId }, token);
+        if (res?.payTicketByInternalWallet) {
+          await loadTicketDetails();
+        } else {
+          alert("Le paiement n'a pas pu être effectué.");
+        }
+        return;
+      }
+
+      // External payment: redirect to the payment provider page
+      const res = await fetchGraphQL(
+        PAY_TICKET_BY_EXTERNAL_PAYMENT,
+        { input: { paymentId, paymentMethod } },
+        token,
+      );
+      if (res?.payTicketByExternalPayment) {
+        window.location.href = res.payTicketByExternalPayment;
+      } else {
+        alert("Impossible de générer le lien de paiement.");
+      }
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erreur lors du paiement");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleCancelTicket = async () => {
+    if (!confirm("Êtes-vous sûr de vouloir annuler ce billet impayé ?")) return;
+    try {
+      setActionLoading(true);
+      const token = Cookies.get("autheeka_token");
+      const res = await fetchGraphQL(CANCEL_TICKET, { ticketId }, token);
+      if (res?.cancelTicket) {
+        router.push("/tickets");
+      } else {
+        alert("Impossible d'annuler le billet.");
+      }
+    } catch (err: any) {
+      alert(err.message || "Erreur lors de l'annulation du billet");
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
   if (isLoading || !isAuthenticated) {
     return (
@@ -93,8 +170,62 @@ export default function TicketDetailsPage() {
         ) : ticket ? (
           <div className="space-y-6">
 
-            {/* QR Code Section */}
-            {ticket.selfPurchase !== false ? (
+            {/* Ticket Payment Status / QR Code Section */}
+            {ticket.payment?.paid === false ? (
+              <div className="bg-amber-50/70 border border-amber-200 rounded-3xl p-6 text-center space-y-4">
+                <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto text-amber-600">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-amber-900">Paiement en attente</h3>
+                  <p className="text-amber-700 text-sm mt-1">
+                    Veuillez finaliser votre paiement pour valider ce billet et obtenir votre code d'accès.
+                  </p>
+                  <p className="text-xl font-black text-amber-900 mt-2">
+                    {ticket.payment.price} {ticket.payment.currency}
+                  </p>
+                </div>
+                {/* Payment method (only when there is a choice) */}
+                {PAYMENT_METHODS.length > 1 && (
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {PAYMENT_METHODS.map((method) => (
+                      <button
+                        key={method.value}
+                        type="button"
+                        onClick={() => setPaymentMethod(method.value)}
+                        disabled={actionLoading}
+                        aria-pressed={paymentMethod === method.value}
+                        className={`px-4 py-2 rounded-full text-sm font-semibold border transition-colors disabled:opacity-50 ${
+                          paymentMethod === method.value
+                            ? "bg-blue-600 text-white border-blue-600"
+                            : "bg-white text-gray-700 border-gray-200 hover:border-blue-300"
+                        }`}
+                      >
+                        {method.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <div className="flex flex-col sm:flex-row gap-3 pt-2 justify-center">
+                  <button
+                    onClick={handlePayNow}
+                    disabled={actionLoading}
+                    className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors shadow-sm disabled:opacity-50"
+                  >
+                    {actionLoading ? "Chargement..." : "Payer maintenant"}
+                  </button>
+                  <button
+                    onClick={handleCancelTicket}
+                    disabled={actionLoading}
+                    className="w-full sm:w-auto px-6 py-3 bg-white hover:bg-gray-50 text-red-600 border border-red-200 font-bold rounded-xl transition-colors disabled:opacity-50"
+                  >
+                    Annuler la réservation
+                  </button>
+                </div>
+              </div>
+            ) : ticket.selfPurchase !== false ? (
               <div className="bg-white rounded-xl px-6 py-4 shadow-xs border border-gray-100 flex flex-col items-center mx-auto w-min">
                 <div className="rounded-3xl mb-2">
                   {ticketCode ? (
@@ -221,7 +352,7 @@ export default function TicketDetailsPage() {
                 <svg className="w-5 h-5 text-blue-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor">
                   <path d="M224,96a8,8,0,0,1-8,8,24,24,0,0,0,0,48,8,8,0,0,1,8,8v32a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V160a8,8,0,0,1,8-8,24,24,0,0,0,0-48,8,8,0,0,1-8-8V64A16,16,0,0,1,48,48H208a16,16,0,0,1,16,16Zm-16-32H48V82a40,40,0,0,1,0,92v18H208V174a40,40,0,0,1,0-92ZM96,160a8,8,0,0,1-8-8V104a8,8,0,0,1,16,0v48A8,8,0,0,1,96,160Zm32,0a8,8,0,0,1-8-8V104a8,8,0,0,1,16,0v48A8,8,0,0,1,128,160Zm32,0a8,8,0,0,1-8-8V104a8,8,0,0,1,16,0v48A8,8,0,0,1,160,160Z" />
                 </svg>
-                Acheter un autre billet
+                Réserver un autre billet
               </Link>
             </div>
 

@@ -7,6 +7,12 @@ export const GET_MY_TICKETS = `
       ownerEmail
       selfPurchase
       createdAt
+      payment {
+        paid
+        price
+        currency
+        paidAt
+      }
       scan {
         createdAt
       }
@@ -31,6 +37,13 @@ export const GET_TICKET_DETAILS = `
       ownerEmail
       selfPurchase
       createdAt
+      payment {
+        id
+        paid
+        price
+        currency
+        paidAt
+      }
       scan {
         createdAt
       }
@@ -50,5 +63,24 @@ export const GET_TICKET_DETAILS = `
 export const GET_TICKET_CODE = `
   query GetTicketCode($id: ID!) {
     ticketCode(id: $id)
+  }
+`;
+
+export const PAY_TICKET_BY_INTERNAL_WALLET = `
+  mutation PayTicketByInternalWallet($paymentId: ID!) {
+    payTicketByInternalWallet(paymentId: $paymentId)
+  }
+`;
+
+/** Returns the payment provider URL to redirect to */
+export const PAY_TICKET_BY_EXTERNAL_PAYMENT = `
+  mutation PayTicketByExternalPayment($input: PayTicketByExternalPaymentInput!) {
+    payTicketByExternalPayment(input: $input)
+  }
+`;
+
+export const CANCEL_TICKET = `
+  mutation CancelTicket($ticketId: ID!) {
+    cancelTicket(ticketId: $ticketId)
   }
 `;

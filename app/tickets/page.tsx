@@ -134,9 +134,15 @@ export default function MyTicketsPage() {
                         {ticket.event.title}
                       </h3>
                       <div className="inline-flex items-center mt-1.5 px-2 py-0.5 bg-white rounded-full shadow-sm w-fit">
-                        <span className="text-[11px] font-bold text-green-600 leading-tight">
-                          Ticket Valide
-                        </span>
+                        {ticket.payment?.paid === false ? (
+                          <span className="text-[11px] font-bold text-amber-600 leading-tight">
+                            Paiement en attente
+                          </span>
+                        ) : (
+                          <span className="text-[11px] font-bold text-green-600 leading-tight">
+                            Ticket Valide
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
