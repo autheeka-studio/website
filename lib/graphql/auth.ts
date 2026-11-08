@@ -21,8 +21,8 @@ export const MUTATION_REGISTER = `
 `;
 
 export const MUTATION_SOCIAL_LOGIN = `
-  mutation SocialLogin($provider: SocialProvider!, $token: String!) {
-    socialLogin(provider: $provider, token: $token) {
+  mutation SocialLogin($provider: SocialProvider!, $token: String!, $currency: Currency) {
+    socialLogin(provider: $provider, token: $token, currency: $currency) {
       token
       refreshToken
       user {
@@ -65,8 +65,8 @@ export const MUTATION_REFRESH_TOKEN = `
 `;
 
 export const MUTATION_VERIFY_REGISTRATION_OTP = `
-  mutation VerifyRegistrationOtp($email: String!, $otp: String!) {
-    verifyRegistrationOtp(email: $email, otp: $otp) {
+  mutation VerifyRegistrationOtp($email: String!, $otp: String!, $currency: Currency) {
+    verifyRegistrationOtp(email: $email, otp: $otp, currency: $currency) {
       token
       refreshToken
       user {

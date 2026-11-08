@@ -43,3 +43,11 @@ export function formatTime(dateString: string) {
     minute: '2-digit'
   }).format(eventDate);
 }
+
+export function currencyFromBrowserRegion(): "HTG" | "USD" | "CAD" | undefined {
+  const region = new Intl.Locale(navigator.language).maximize().region;
+  if (!region) return undefined;
+  if (region === "HT") return "HTG";
+  if (region === "CA") return "CAD";
+  return "USD";
+}

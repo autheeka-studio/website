@@ -25,6 +25,8 @@ export function translateError(errorCode: string): string {
       return "Votre compte est bloqué suite à trop de tentatives. Veuillez réessayer plus tard.";
     case "invalid_token":
       return "La session a expiré ou le jeton est invalide. Veuillez vous reconnecter.";
+    case "social_email_mismatch":
+      return "L'email du compte Google sélectionné ne correspond pas à l'email de votre compte Autheeka.";
     case "invalid_refresh_token":
       return "Impossible de rafraîchir la session. Veuillez vous reconnecter.";
 

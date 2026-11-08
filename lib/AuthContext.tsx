@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import Cookies from "js-cookie";
 import { fetchGraphQL } from "./api";
+import { currencyFromBrowserRegion } from "./utils";
 import {
   MUTATION_LOGIN,
   MUTATION_REGISTER,
@@ -99,7 +100,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const socialLogin = async (token: string, provider: string = "GOOGLE"): Promise<void> => {
-    const data = await fetchGraphQL(MUTATION_SOCIAL_LOGIN, { provider, token });
+    const data = await fetchGraphQL(MUTATION_SOCIAL_LOGIN, {
+      provider,
+      token,
+      currency: currencyFromBrowserRegion(),
+    });
     if (data?.socialLogin?.token) {
       saveTokensAndUser(data.socialLogin.token, data.socialLogin.refreshToken, data.socialLogin.user);
       return;
@@ -108,7 +113,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const confirmEmail = async (email: string, otp: string): Promise<void> => {
-    const data = await fetchGraphQL(MUTATION_CONFIRM_EMAIL, { email, otp });
+    const data = await fetchGraphQL(MUTATION_CONFIRM_EMAIL, {
+      email,
+      otp,
+      currency: currencyFromBrowserRegion(),
+    });
     const payload = data?.verifyRegistrationOtp || data?.confirmEmail;
     if (payload?.token) {
       saveTokensAndUser(payload.token, payload.refreshToken, payload.user);
