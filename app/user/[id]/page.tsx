@@ -144,9 +144,10 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
           alt=""
           className="absolute inset-0 w-full h-full object-cover brightness-0 invert opacity-25"
         />
-        {/* Curved edge: low on the avatar side, rising to the right */}
+        {/* Curved edge: low on the avatar side, rising to the right.
+            1px lower than the banner: no thin line of the gradient left below it */}
         <svg
-          className="absolute bottom-0 left-0 w-full h-6 text-gray-50"
+          className="absolute -bottom-px left-0 block w-full h-[25px] text-gray-50"
           viewBox="0 0 100 24"
           preserveAspectRatio="none"
           fill="currentColor"
