@@ -13,6 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         user(id: $id) {
           name
           picture
+          bio
         }
       }
     `, { id: resolvedParams.id });
@@ -23,12 +24,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     };
 
     const imageUrl = user.picture ? getMediaVariant(user.picture, 'medium') : undefined;
+    // The bio describes the profile best, when there is one
+    const description = user.bio || `Découvrez le profil et les événements de ${user.name} sur Autheeka.`;
     return {
       title: `${user.name} | Autheeka`,
-      description: `Découvrez le profil et les événements de ${user.name} sur Autheeka.`,
+      description,
       openGraph: {
         title: `${user.name} | Autheeka`,
-        description: `Découvrez le profil et les événements de ${user.name} sur Autheeka.`,
+        description,
         images: imageUrl ? [
           {
             url: imageUrl,
@@ -88,6 +91,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
         id
         name
         picture
+        bio
         badge
         whatsapp
         facebook
@@ -152,6 +156,13 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
             <h1 className="text-2xl font-bold text-gray-900 drop-shadow-xs">{user.name}</h1>
             <VerifiedBadge badge={user.badge} className="w-5.5 h-5.5" />
           </div>
+
+          {/* Bio */}
+          {user.bio && (
+            <p className="mt-3 max-w-md text-center text-gray-700 whitespace-pre-line relative z-10">
+              {user.bio}
+            </p>
+          )}
 
           {/* Social Links */}
           <div className="mt-6 flex flex-wrap justify-center gap-3 relative z-10">

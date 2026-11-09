@@ -74,6 +74,11 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
         description
         picture
         location
+        address
+        coordinates {
+          latitude
+          longitude
+        }
         category
         date
         price
@@ -95,6 +100,12 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
   if (!event) {
     notFound();
   }
+
+  // Google Maps search on the exact position when given, else on the address
+  const mapsQuery = event.coordinates
+    ? `${event.coordinates.latitude},${event.coordinates.longitude}`
+    : event.address;
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`;
 
 
   return (
@@ -174,14 +185,30 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
 
-          {/* Location */}
-          <div className="bg-blue-600/5 border border-blue-600/10 p-3 rounded-2xl mb-8">
+          {/* Venue name */}
+          <div className="bg-blue-600/5 border border-blue-600/10 p-3 rounded-2xl mb-3">
             <div className="flex items-center gap-1.5 text-blue-600 mb-1.5">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
               <span className="text-sm font-semibold opacity-80">Lieu</span>
             </div>
             <div className="font-bold text-gray-900 line-clamp-2">{event.location}</div>
           </div>
+
+          {/* Exact address, opened in Google Maps */}
+          <a
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-blue-600/5 border border-blue-600/10 hover:bg-blue-600/10 transition-colors p-3 rounded-2xl mb-8"
+          >
+            <div className="flex items-center gap-1.5 text-blue-600 mb-1.5">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+              <span className="text-sm font-semibold opacity-80">Adresse</span>
+              {/* Shows that the card opens the map */}
+              <svg className="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </div>
+            <div className="font-bold text-gray-900 line-clamp-2">{event.address}</div>
+          </a>
 
           {/* Organizer */}
           <h2 className="text-lg font-bold mb-3">Organisé par</h2>
