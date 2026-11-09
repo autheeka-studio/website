@@ -156,17 +156,35 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
       </div>
 
       <div className="mx-4 sm:mx-12 md:mx-24 lg:mx-40 xl:mx-64 -mt-12 relative z-10">
-        {/* Avatar, with a ring in the page color */}
-        <div className="w-[96px] h-[96px] rounded-full p-1 bg-gray-50">
-          <div className="w-full h-full rounded-full overflow-hidden bg-gray-200">
-            {user.picture ? (
-              <img src={avatarUrl} alt={user.name} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-blue-50 text-blue-600 text-3xl font-bold">
-                {user.name.charAt(0).toUpperCase()}
-              </div>
-            )}
+        {/* Avatar and, beside it in its part below the banner, the counters */}
+        <div className="flex items-end gap-3">
+          {/* Avatar, with a ring in the page color */}
+          <div className="w-[96px] h-[96px] shrink-0 rounded-full p-1 bg-gray-50">
+            <div className="w-full h-full rounded-full overflow-hidden bg-gray-200">
+              {user.picture ? (
+                <img src={avatarUrl} alt={user.name} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-blue-50 text-blue-600 text-3xl font-bold">
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+              )}
+            </div>
           </div>
+
+          {user.stats && (
+            <div className="flex-1 flex justify-evenly pb-1">
+              {[
+                { value: user.stats.events, label: "Événements" },
+                { value: user.stats.actualities, label: "Actualités" },
+                { value: user.stats.followers, label: "Abonnés" },
+              ].map((counter) => (
+                <div key={counter.label}>
+                  <div className="text-lg font-bold text-gray-900">{counter.value}</div>
+                  <div className="text-sm text-gray-500">{counter.label}</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Name and badge */}
@@ -174,22 +192,6 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 truncate">{user.name}</h1>
           <VerifiedBadge badge={user.badge} className="w-5 h-5 shrink-0" />
         </div>
-
-        {/* Counters */}
-        {user.stats && (
-          <div className="mt-2 flex gap-6">
-            {[
-              { value: user.stats.events, label: "Événements" },
-              { value: user.stats.actualities, label: "Actualités" },
-              { value: user.stats.followers, label: "Abonnés" },
-            ].map((counter) => (
-              <div key={counter.label}>
-                <div className="text-lg font-bold text-gray-900">{counter.value}</div>
-                <div className="text-sm text-gray-500">{counter.label}</div>
-              </div>
-            ))}
-          </div>
-        )}
 
         {/* Bio */}
         {user.bio && (
