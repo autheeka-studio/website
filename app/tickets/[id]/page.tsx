@@ -7,18 +7,12 @@ import { fetchGraphQL } from "@/lib/api";
 import {
   GET_TICKET_DETAILS,
   GET_TICKET_CODE,
-  PAY_TICKET_BY_INTERNAL_WALLET,
-  PAY_TICKET_BY_EXTERNAL_PAYMENT,
   CANCEL_TICKET,
 } from "@/lib/graphql/ticket";
 import { getMediaVariant } from "@/lib/utils";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { QRCode } from "react-qrcode-logo";
-import {
-  PaymentMethod,
-  SelectPaymentMethodModal,
-} from "@/components/SelectPaymentMethodModal";
 
 export default function TicketDetailsPage() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -31,7 +25,6 @@ export default function TicketDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
-  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -75,46 +68,6 @@ export default function TicketDetailsPage() {
   useEffect(() => {
     loadTicketDetails();
   }, [isAuthenticated, ticketId]);
-
-  // Same flow as the app: "Payer maintenant" opens the payment method choice,
-  // the payment only starts after "Continuer"
-  const handlePayNow = () => setPaymentModalOpen(true);
-
-  const payTicket = async (paymentMethod: PaymentMethod) => {
-    const paymentId = ticket?.payment?.id;
-    if (!paymentId) return;
-    try {
-      setActionLoading(true);
-      const token = Cookies.get("autheeka_token");
-
-      // Internal wallet: paid immediately, reload the ticket to show its code
-      if (paymentMethod === "INTERNAL_FUND") {
-        const res = await fetchGraphQL(PAY_TICKET_BY_INTERNAL_WALLET, { paymentId }, token);
-        if (res?.payTicketByInternalWallet) {
-          await loadTicketDetails();
-        } else {
-          alert("Le paiement n'a pas pu être effectué.");
-        }
-        return;
-      }
-
-      // External payment: redirect to the payment provider page
-      const res = await fetchGraphQL(
-        PAY_TICKET_BY_EXTERNAL_PAYMENT,
-        { input: { paymentId, paymentMethod } },
-        token,
-      );
-      if (res?.payTicketByExternalPayment) {
-        window.location.href = res.payTicketByExternalPayment;
-      } else {
-        alert("Impossible de générer le lien de paiement.");
-      }
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Erreur lors du paiement");
-    } finally {
-      setActionLoading(false);
-    }
-  };
 
   const handleCancelTicket = async () => {
     if (!confirm("Êtes-vous sûr de vouloir annuler ce billet impayé ?")) return;
@@ -179,20 +132,20 @@ export default function TicketDetailsPage() {
                 <div>
                   <h3 className="text-lg font-bold text-amber-900">Paiement en attente</h3>
                   <p className="text-amber-700 text-sm mt-1">
-                    Veuillez finaliser votre paiement pour valider ce billet et obtenir votre code d'accès.
+                    Finalisez votre paiement dans l'application Autheeka pour valider ce billet et obtenir votre code d'accès.
                   </p>
                   <p className="text-xl font-black text-amber-900 mt-2">
                     {ticket.payment.price} {ticket.payment.currency}
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 pt-2 justify-center">
-                  <button
-                    onClick={handlePayNow}
-                    disabled={actionLoading}
-                    className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors shadow-sm disabled:opacity-50"
+                  {/* The payment is only made in the app, like the purchase */}
+                  <Link
+                    href={`/buy/${ticket.event.id}`}
+                    className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors shadow-sm"
                   >
-                    {actionLoading ? "Chargement..." : "Payer maintenant"}
-                  </button>
+                    Payer dans l'application
+                  </Link>
                   <button
                     onClick={handleCancelTicket}
                     disabled={actionLoading}
@@ -337,11 +290,6 @@ export default function TicketDetailsPage() {
         ) : null}
 
       </div>
-      <SelectPaymentMethodModal
-        open={paymentModalOpen}
-        onClose={() => setPaymentModalOpen(false)}
-        onSelect={payTicket}
-      />
     </main>
   );
 }

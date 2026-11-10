@@ -55,7 +55,7 @@ export default async function ExplorePage() {
                 return (
                   <Link
                     key={actuality.id}
-                    href={`/actuality/${actuality.id}`}
+                    href={`/actuality/${actuality.id}?userId=${actuality.user.id}`}
                     className={`shrink-0 w-[100px] h-[140px] group flex flex-col rounded-[25px] overflow-hidden relative cursor-pointer border-[2px] p-[1.5px] transition-transform hover:scale-100 ${isViewed ? 'border-gray-600' : 'border-blue-600'}`}
                     title="Voir cette actualité dans l'application"
                   >

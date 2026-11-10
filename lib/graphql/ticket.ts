@@ -66,19 +66,6 @@ export const GET_TICKET_CODE = `
   }
 `;
 
-export const PAY_TICKET_BY_INTERNAL_WALLET = `
-  mutation PayTicketByInternalWallet($paymentId: ID!) {
-    payTicketByInternalWallet(paymentId: $paymentId)
-  }
-`;
-
-/** Returns the payment provider URL to redirect to */
-export const PAY_TICKET_BY_EXTERNAL_PAYMENT = `
-  mutation PayTicketByExternalPayment($input: PayTicketByExternalPaymentInput!) {
-    payTicketByExternalPayment(input: $input)
-  }
-`;
-
 export const CANCEL_TICKET = `
   mutation CancelTicket($ticketId: ID!) {
     cancelTicket(ticketId: $ticketId)

@@ -3,12 +3,20 @@
 import { useEffect, useState, use } from "react";
 import Link from "next/link";
 
-export default function ActualityRedirectPage({ params }: { params: Promise<{ id: string }> }) {
+export default function ActualityRedirectPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ userId?: string }>;
+}) {
   const resolvedParams = use(params);
+  const { userId } = use(searchParams);
   const [redirectFailed, setRedirectFailed] = useState(false);
 
   useEffect(() => {
-    const deepLink = `autheeka://actuality/${resolvedParams.id}`;
+    // L'app charge les actualités par auteur : userId est requis
+    const deepLink = `autheeka://actuality/${resolvedParams.id}?userId=${userId ?? ""}`;
     
     // Attempt to redirect to the app
     window.location.href = deepLink;
@@ -31,7 +39,7 @@ export default function ActualityRedirectPage({ params }: { params: Promise<{ id
       clearTimeout(timeout);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [resolvedParams.id]);
+  }, [resolvedParams.id, userId]);
 
   return (
     <main className="flex-1 w-full bg-gray-50 min-h-[calc(100vh-64px)] flex items-center justify-center p-4">
