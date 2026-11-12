@@ -47,16 +47,14 @@ export default async function TicketReceivedPage({
           </svg>
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">
           {error ? "Confirmation impossible" : "Réception confirmée"}
         </h1>
-        <p className={`mb-10 text-lg ${error ? "text-red-600" : "text-gray-500"}`}>
-          {error || "Merci ! Votre billet est bien arrivé. Bon événement !"}
-        </p>
+        {error && <p className="text-red-600">{error}</p>}
 
         <Link
           href="/"
-          className="inline-flex items-center justify-center text-blue-600 font-semibold hover:underline"
+          className="inline-flex items-center justify-center mt-8 text-blue-600 font-semibold hover:underline"
         >
           Retour à l&apos;accueil
         </Link>
