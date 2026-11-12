@@ -21,12 +21,12 @@ export default async function TicketReceivedPage({
 }) {
   const { token } = await searchParams;
 
-  let error = token ? "" : "Ce lien est incomplet.";
+  let error = !token;
   if (token) {
     try {
       await fetchGraphQL(CONFIRM_TICKET_RECEIPT, { token });
-    } catch (err) {
-      error = err instanceof Error ? err.message : "La confirmation a échoué.";
+    } catch {
+      error = true;
     }
   }
 
@@ -48,9 +48,8 @@ export default async function TicketReceivedPage({
         </div>
 
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          {error ? "Confirmation impossible" : "Réception confirmée"}
+          {error ? "Erreur lors de la confirmation" : "Réception confirmée"}
         </h1>
-        {error && <p className="text-red-600">{error}</p>}
 
         <Link
           href="/"
