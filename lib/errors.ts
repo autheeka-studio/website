@@ -60,6 +60,8 @@ export function translateError(errorCode: string): string {
       return "Ce billet n'existe pas ou a été supprimé.";
     case "ticket_already_paid":
       return "Ce billet a déjà été payé.";
+    case "ticket_already_received":
+      return "Ce billet a déjà été reçu par son destinataire.";
     case "duplicate_ticket":
       return "Vous possédez déjà ce billet.";
     case "event_has_tickets":
