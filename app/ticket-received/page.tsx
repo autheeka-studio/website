@@ -48,7 +48,7 @@ export default async function TicketReceivedPage({
         </div>
 
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          {error ? "Erreur lors de la confirmation" : "Réception confirmée"}
+          {error ? "Erreur de confirmation" : "Réception confirmée"}
         </h1>
 
         <Link
