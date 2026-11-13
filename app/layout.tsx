@@ -8,6 +8,7 @@ import { MobileNav } from "@/components/MobileNav";
 import { DesktopNav } from "@/components/DesktopNav";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Analytics } from "@vercel/analytics/next"
+import { SITE_NAME, SITE_URL } from "@/lib/metadata";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -21,11 +22,9 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Autheeka - Événements, Billetterie & Accès Sécurisé",
-  description: "Découvrez Autheeka, le réseau social événementiel avec billetterie sécurisée et scan ultra-rapide.",
-  icons: {
-    icon: "/logo_icon.png",
-  },
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  applicationName: SITE_NAME,
 };
 
 export default function RootLayout({
@@ -65,17 +64,17 @@ export default function RootLayout({
                     <p className="mt-4 text-gray-500 text-sm max-w-sm">Des événements authentiques, des billets infalsifiables et une entrée en un scan. L’esprit tranquille, du billet à l’entrée.</p>
                   </div>
                   <div>
+                    <h3 className="font-bold text-gray-900 mb-4">Autheeka</h3>
+                    <ul className="space-y-2 text-sm text-gray-500">
+                      <li><Link href="/about" className="hover:text-blue-600">À propos</Link></li>
+                      <li><a href="mailto:support@autheeka.com" className="hover:text-blue-600">Support</a></li>
+                    </ul>
+                  </div>
+                  <div>
                     <h3 className="font-bold text-gray-900 mb-4">Légal</h3>
                     <ul className="space-y-2 text-sm text-gray-500">
                       <li><Link href="/terms" className="hover:text-blue-600">Conditions générales</Link></li>
                       <li><Link href="/privacy-policy" className="hover:text-blue-600">Confidentialité</Link></li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900 mb-4">Contact</h3>
-                    <ul className="space-y-2 text-sm text-gray-500">
-                      <li><Link href="/about" className="hover:text-blue-600">À propos</Link></li>
-                      <li><a href="mailto:support@autheeka.com" className="hover:text-blue-600">Support</a></li>
                     </ul>
                   </div>
                 </div>

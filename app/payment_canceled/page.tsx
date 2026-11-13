@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
+import { privateMetadata } from "@/lib/metadata";
 import { PaymentResult } from "@/components/PaymentResult";
 
-export const metadata: Metadata = {
-  title: "Paiement annulé",
-  robots: { index: false },
-};
+export const metadata: Metadata = privateMetadata("Paiement annulé");
 
 export default function PaymentCanceledPage() {
   return <PaymentResult success={false} />;

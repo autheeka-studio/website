@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { fetchGraphQL } from "@/lib/api";
 import { getMediaVariant, formatDate, formatTime } from "@/lib/utils";
 import type { Metadata } from "next";
+import { excerpt, pageMetadata } from "@/lib/metadata";
 
 const VerifiedBadge = ({ badge, className = "w-5 h-5" }: { badge: string, className?: string }) => {
   if (badge !== 'GOLD' && badge !== 'SILVER') return null;
@@ -30,35 +31,19 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     `, { id: resolvedParams.id });
 
     const event = data?.event;
-    if (!event) return {
-      title: 'Événement introuvable | Autheeka'
-    };
+    if (!event) return { title: "Événement introuvable" };
 
-    const imageUrl = getMediaVariant(event.picture, 'large');
     return {
-      title: `${event.title} | Autheeka`,
-      description: event.description || "Découvrez cet événement sur Autheeka.",
-      openGraph: {
-        title: `${event.title} | Autheeka`,
-        description: event.description || "Découvrez cet événement sur Autheeka.",
-        images: [
-          {
-            url: imageUrl,
-            width: 1200,
-            height: 630,
-            alt: event.title,
-          },
-        ],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: `${event.title} | Autheeka`,
-        description: event.description || "Découvrez cet événement sur Autheeka.",
-        images: [imageUrl],
-      },
+      ...pageMetadata({
+        title: event.title,
+        description: excerpt(event.description || "Découvrez cet événement et réservez votre billet sur Autheeka."),
+        path: `/event/${resolvedParams.id}`,
+        images: [{ url: getMediaVariant(event.picture, "large"), alt: event.title }],
+      }),
+      twitter: { card: "summary_large_image" },
     };
   } catch (error) {
-    return { title: 'Événement | Autheeka' };
+    return { title: "Événement" };
   }
 }
 

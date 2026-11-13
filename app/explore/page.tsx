@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { fetchGraphQL } from "@/lib/api";
 import { getMediaVariant } from "@/lib/utils";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/metadata";
 import { GET_HOME_FEED, GET_LAST_ACTUALITIES_COVERS } from "@/lib/graphql/event";
 
-export const metadata: Metadata = {
-  title: "Explorer les événements | Autheeka",
-  description: "Découvrez les meilleurs événements à venir avec Autheeka.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Explorer les événements",
+  description: "Concerts, soirées, conférences : les événements populaires, gratuits et du jour près de chez vous, avec billets infalsifiables.",
+  path: "/explore",
+});
 
 const CalendarIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>

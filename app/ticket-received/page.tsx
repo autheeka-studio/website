@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { fetchGraphQL } from "@/lib/api";
+import { privateMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Réception du billet | Autheeka",
-  robots: { index: false },
-};
+export const metadata: Metadata = privateMetadata("Réception du billet");
 
 const CONFIRM_TICKET_RECEIPT = `
   mutation ConfirmTicketReceipt($token: String!) {

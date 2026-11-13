@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/metadata";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Politique de confidentialité",
+  description: "Les données collectées par Autheeka, leur utilisation, leur partage et vos droits.",
+  path: "/privacy-policy",
+});
 
 export default function PrivacyPolicy() {
   return (

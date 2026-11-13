@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Conditions Générales | Autheeka",
-  description: "Conditions Générales d'Utilisation et de Vente de la plateforme Autheeka.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Conditions générales",
+  description: "Conditions générales d'utilisation et de vente de la plateforme Autheeka.",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

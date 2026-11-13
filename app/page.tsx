@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/metadata";
 import { CheckIcon, ScanIcon, ShieldCheckIcon, TicketIcon, UsersIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
-  title: "Autheeka | Billetterie et événements en toute confiance",
-  description:
-    "Découvrez des événements, achetez des billets infalsifiables et entrez en un scan. Organisateurs vérifiés, paiement MonCash ou carte.",
+  ...pageMetadata({
+    title: "Autheeka | Billetterie et événements en toute confiance",
+    description:
+      "Découvrez des événements, achetez des billets infalsifiables et entrez en un scan. Organisateurs vérifiés, paiement MonCash, carte, Apple Pay ou Google Pay.",
+    path: "/",
+  }),
+  // Same segment as the layout: its title template does not apply here
+  title: { absolute: "Autheeka | Billetterie et événements en toute confiance" },
 };
 
 const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.autheeka.ticketing";

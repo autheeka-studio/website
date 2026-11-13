@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { fetchGraphQL } from "@/lib/api";
 import { getMediaVariant, formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
+import { excerpt, pageMetadata } from "@/lib/metadata";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
@@ -19,37 +20,20 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     `, { id: resolvedParams.id });
 
     const user = data?.user;
-    if (!user) return {
-      title: 'Profil introuvable | Autheeka'
-    };
+    if (!user) return { title: "Profil introuvable" };
 
-    const imageUrl = user.picture ? getMediaVariant(user.picture, 'medium') : undefined;
-    // The bio describes the profile best, when there is one
-    const description = user.bio || `Découvrez le profil et les événements de ${user.name} sur Autheeka.`;
     return {
-      title: `${user.name} | Autheeka`,
-      description,
-      openGraph: {
-        title: `${user.name} | Autheeka`,
-        description,
-        images: imageUrl ? [
-          {
-            url: imageUrl,
-            width: 800,
-            height: 800,
-            alt: user.name,
-          },
-        ] : [],
-      },
-      twitter: {
-        card: 'summary',
-        title: `${user.name} | Autheeka`,
-        description: `Découvrez le profil et les événements de ${user.name} sur Autheeka.`,
-        images: imageUrl ? [imageUrl] : [],
-      },
+      ...pageMetadata({
+        title: user.name,
+        // The bio describes the profile best, when there is one
+        description: excerpt(user.bio || `Découvrez le profil et les événements de ${user.name} sur Autheeka.`),
+        path: `/user/${resolvedParams.id}`,
+        images: user.picture ? [{ url: getMediaVariant(user.picture, "medium"), alt: user.name }] : undefined,
+      }),
+      twitter: { card: "summary" },
     };
   } catch (error) {
-    return { title: 'Profil | Autheeka' };
+    return { title: "Profil" };
   }
 }
 

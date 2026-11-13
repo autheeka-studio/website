@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "À propos | Autheeka",
+export const metadata: Metadata = pageMetadata({
+  title: "À propos",
   description:
-    "Pourquoi Autheeka existe, comment fonctionnent les billets, la vérification des organisateurs, les paiements et le contrôle d’accès.",
-};
+    "Pourquoi Autheeka existe, comment fonctionnent les billets infalsifiables, la vérification des organisateurs, les paiements et le contrôle d’accès.",
+  path: "/about",
+});
 
 const PARTICIPANT_STEPS = [
   {
