@@ -62,7 +62,7 @@ export default function RootLayout({
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                   <div className="col-span-1 md:col-span-2">
                     <img src="/logo_text.png" alt="Autheeka" className="h-6 w-auto grayscale opacity-80" />
-                    <p className="mt-4 text-gray-500 text-sm max-w-sm">Le réseau social événementiel avec billetterie sécurisée et scan ultra-rapide. Vivez l'expérience à fond.</p>
+                    <p className="mt-4 text-gray-500 text-sm max-w-sm">Des événements authentiques, des billets infalsifiables et une entrée en un scan. L’esprit tranquille, du billet à l’entrée.</p>
                   </div>
                   <div>
                     <h3 className="font-bold text-gray-900 mb-4">Légal</h3>
@@ -74,6 +74,7 @@ export default function RootLayout({
                   <div>
                     <h3 className="font-bold text-gray-900 mb-4">Contact</h3>
                     <ul className="space-y-2 text-sm text-gray-500">
+                      <li><Link href="/about" className="hover:text-blue-600">À propos</Link></li>
                       <li><a href="mailto:support@autheeka.com" className="hover:text-blue-600">Support</a></li>
                     </ul>
                   </div>

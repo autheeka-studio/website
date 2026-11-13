@@ -40,6 +40,7 @@ export function MobileNav() {
           <div className="absolute top-[64px] left-0 w-full bg-white border-b border-gray-100 shadow-md py-4 px-6 flex flex-col gap-4 font-semibold text-gray-600 z-[110]">
             <Link href="/explore" onClick={() => setIsOpen(false)} className={getLinkClass('/explore')}>Explorer</Link>
             <Link href="/create" onClick={() => setIsOpen(false)} className={getLinkClass('/create')}>Créer un événement</Link>
+            <Link href="/about" onClick={() => setIsOpen(false)} className={getLinkClass('/about')}>À propos</Link>
             <a href="mailto:support@autheeka.com" onClick={() => setIsOpen(false)} className="hover:text-blue-600 transition-colors py-2">Aide</a>
           </div>
       )}

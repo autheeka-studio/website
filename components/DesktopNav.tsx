@@ -19,6 +19,9 @@ export function DesktopNav() {
       <Link href="/create" className={getLinkClass('/create')}>
         Créer un événement
       </Link>
+      <Link href="/about" className={getLinkClass('/about')}>
+        À propos
+      </Link>
       <a href="mailto:support@autheeka.com" className="hover:text-blue-600 transition-colors font-semibold text-gray-600">
         Aide
       </a>
