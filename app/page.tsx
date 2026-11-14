@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: { absolute: "Autheeka | Billetterie et événements en toute confiance" },
 };
 
-const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.autheeka.ticketing";
+const PLAY_STORE_URL = "https://play.google.com/apps/testing/com.autheeka.ticketing";
 
 const PILLARS = [
   {

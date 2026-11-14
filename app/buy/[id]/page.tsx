@@ -54,7 +54,7 @@ export default function BuyRedirectPage({ params }: { params: Promise<{ id: stri
             
             <div className="flex justify-center mt-6">
               <a 
-                href="https://play.google.com/store/apps/details?id=com.autheeka.ticketing"
+                href="https://play.google.com/apps/testing/com.autheeka.ticketing"
                 className="hover:-translate-y-1 transition-transform inline-block"
                 target="_blank"
                 rel="noopener noreferrer"
